@@ -62,7 +62,7 @@ class PostController extends Controller
         $posts = Post::with(['user', 'attachments'])
             ->where(function ($q) {
                 $q->where('user_id', auth()->id())
-                    ->orWhereIn('user_id', auth()->user()->followings()->pluck('id'));
+                    ->orWhereIn('user_id', auth()->user()->followings()->pluck('following_id'));
             })
             ->orderBy('created_at', 'desc')
             ->paginate($size);
