@@ -18,31 +18,33 @@ use App\Http\Controllers\Api\V1\FollowerController;
 use App\Http\Controllers\Api\V1\PostController;
 use App\Http\Controllers\Api\V1\UserController;
 
-Route::prefix('v1/auth')->group(function () {
-    Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login', [AuthController::class, 'login']);
+Route::group(['middleware' => 'cors'], function () {
+    Route::prefix('v1/auth')->group(function () {
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
 
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::middleware('auth:sanctum')->group(function () {
+            Route::post('/logout', [AuthController::class, 'logout']);
+        });
     });
-});
 
-Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
-    Route::post('/posts', [PostController::class, 'store']);
-    Route::delete('/posts/{id}', [PostController::class, 'destroy']);
-    Route::get('/posts', [PostController::class, 'index']);
+    Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+        Route::post('/posts', [PostController::class, 'store']);
+        Route::delete('/posts/{id}', [PostController::class, 'destroy']);
+        Route::get('/posts', [PostController::class, 'index']);
 
-    Route::post('/users/{username}/follow', [FollowController::class, 'follow']);
-    Route::delete('/users/{username}/unfollow', [FollowController::class, 'unfollow']);
-    Route::get('/following', [FollowController::class, 'following']);
+        Route::post('/users/{username}/follow', [FollowController::class, 'follow']);
+        Route::delete('/users/{username}/unfollow', [FollowController::class, 'unfollow']);
+        Route::get('/following', [FollowController::class, 'following']);
 
-    Route::put('/users/{username}/accept', [FollowerController::class, 'accept']);
-    Route::put('/users/{username}/reject', [FollowerController::class, 'reject']);
-    Route::get('/users/followers', [FollowerController::class, 'followers']);
-    Route::get('/users/pending-followers', [FollowerController::class, 'pendingFollowers']);
-    Route::get('/users/rejected-followers', [FollowerController::class, 'rejectedFollowers']);
-    Route::get('/users/notifications', [FollowerController::class, 'notifications']);
+        Route::put('/users/{username}/accept', [FollowerController::class, 'accept']);
+        Route::put('/users/{username}/reject', [FollowerController::class, 'reject']);
+        Route::get('/users/followers', [FollowerController::class, 'followers']);
+        Route::get('/users/pending-followers', [FollowerController::class, 'pendingFollowers']);
+        Route::get('/users/rejected-followers', [FollowerController::class, 'rejectedFollowers']);
+        Route::get('/users/notifications', [FollowerController::class, 'notifications']);
 
-    Route::get('/users/{username}', [UserController::class, 'show']);
-    Route::get('/users', [UserController::class, 'index']);
+        Route::get('/users/{username}', [UserController::class, 'show']);
+        Route::get('/users', [UserController::class, 'index']);
+    });
 });
