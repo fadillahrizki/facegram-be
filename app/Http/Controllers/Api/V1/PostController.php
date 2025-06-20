@@ -59,7 +59,7 @@ class PostController extends Controller
     {
         $size = max((int) $request->query('size', 10), 1);
 
-        $posts = Post::with(['user', 'attachments', 'likes', 'comments.user'])
+        $posts = Post::with(['user.profilePicture', 'attachments', 'likes', 'comments.user.profilePicture'])
             ->where(function ($q) {
                 $q->where('user_id', auth()->id())
                     ->orWhereIn('user_id', auth()->user()->followings()->pluck('following_id'));
