@@ -22,7 +22,7 @@ class UserController extends Controller
     {
         $validated = $request->validate([
             'full_name' => 'required|string|min:1',
-            'bio' => 'required|string|min:3|max:100',
+            'bio' => 'required|string|min:1|max:100',
             'username' => [
                 'required',
                 'min:3',
