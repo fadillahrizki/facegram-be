@@ -59,7 +59,7 @@ class PostController extends Controller
     {
         $size = max((int) $request->query('size', 10), 1);
 
-        $posts = Post::with(['user', 'attachments', 'likes'])
+        $posts = Post::with(['user', 'attachments', 'likes', 'comments.user'])
             ->where(function ($q) {
                 $q->where('user_id', auth()->id())
                     ->orWhereIn('user_id', auth()->user()->followings()->pluck('following_id'));
@@ -91,5 +91,19 @@ class PostController extends Controller
         }
 
         return response()->json(['message' => $message, 'data' => $liked]);
+    }
+
+    public function comment(Request $request, $id)
+    {
+        $post = Post::find($id);
+
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        $comment = $post->comments()->create(['user_id' => auth()->id(), 'content' => $request->content])->load('user');
+        $message = "success to comment the post";
+
+        return response()->json(['message' => $message, 'data' => $comment]);
     }
 }

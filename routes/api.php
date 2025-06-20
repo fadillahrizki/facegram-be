@@ -33,6 +33,7 @@ Route::group(['middleware' => 'cors'], function () {
         Route::delete('/posts/{id}', [PostController::class, 'destroy']);
         Route::get('/posts', [PostController::class, 'index']);
         Route::put('/posts/like/{id}', [PostController::class, 'like']);
+        Route::put('/posts/comment/{id}', [PostController::class, 'comment']);
 
         Route::post('/users/{username}/follow', [FollowController::class, 'follow']);
         Route::delete('/users/{username}/unfollow', [FollowController::class, 'unfollow']);
