@@ -28,7 +28,7 @@ Route::group(['middleware' => 'cors'], function () {
         });
     });
 
-    Route::middleware('auth:sanctum')->prefix('v1')->group(function () {
+    Route::middleware(['auth:sanctum', 'optimizeImages'])->prefix('v1')->group(function () {
         Route::post('/posts', [PostController::class, 'store']);
         Route::delete('/posts/{id}', [PostController::class, 'destroy']);
         Route::get('/posts', [PostController::class, 'index']);
