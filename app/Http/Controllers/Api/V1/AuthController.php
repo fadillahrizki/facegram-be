@@ -12,8 +12,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'full_name' => 'required|string',
-            'bio' => 'required|string|max:100',
+            'full_name' => 'required|string:min:1',
+            'bio' => 'required|string|min:1|max:100',
             'username' => 'required|min:3|unique:users|regex:/^[a-zA-Z0-9._]+$/',
             'password' => 'required|min:6',
             'is_private' => 'boolean'
