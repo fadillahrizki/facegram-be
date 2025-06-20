@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\ProfilePicture;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -12,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::where('id', '!=', auth()->id())
+        $users = User::where('id', '!=', auth()->id())->with('profilePicture')
             ->get();
 
         return response()->json($users);
@@ -45,9 +46,24 @@ class UserController extends Controller
         ], 200);
     }
 
+    public function updateProfilePicture(Request $request)
+    {
+        $request->validate([
+            'profile_picture' => 'required|file|mimes:jpg,jpeg,png,webp,gif',
+        ]);
+
+        $path = $request->file('profile_picture')->store('profile_pictures', 'public');
+        $updated = ProfilePicture::updateOrCreate(['user_id' => auth()->id()], ['storage_path' => $path]);
+
+        return response()->json([
+            'message' => 'success update profile picture',
+            'data' => $updated
+        ], 200);
+    }
+
     public function show($username)
     {
-        $user = User::where('username', $username)->first();
+        $user = User::where('username', $username)->with('profilePicture')->first();
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
@@ -109,6 +125,7 @@ class UserController extends Controller
             'posts_count' => $postsCount,
             'followers_count' => $followersCount,
             'following_count' => $followingCount,
+            'profile_picture' => $user->profilePicture,
             'posts' => $posts
         ]);
     }

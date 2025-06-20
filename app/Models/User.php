@@ -44,6 +44,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function profilePicture()
+    {
+        return $this->hasOne(ProfilePicture::class);
+    }
+
     public function posts()
     {
         return $this->hasMany(Post::class);
