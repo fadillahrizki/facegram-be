@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -17,6 +18,32 @@ class UserController extends Controller
         return response()->json($users);
     }
 
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'full_name' => 'required|string',
+            'bio' => 'required|string|max:100',
+            'username' => [
+                'required',
+                'min:3',
+                'regex:/^[a-zA-Z0-9._]+$/',
+                Rule::unique('users')->ignore(auth()->user()->username, 'username')
+            ],
+            'is_private' => 'boolean'
+        ]);
+
+        User::where('id', auth()->id())->update([
+            'full_name' => $validated['full_name'],
+            'bio' => $validated['bio'],
+            'username' => $validated['username'],
+            'is_private' => $validated['is_private'] ?? false
+        ]);
+
+        return response()->json([
+            'message' => 'Update success',
+            'user' => User::find(auth()->id())
+        ], 200);
+    }
 
     public function show($username)
     {

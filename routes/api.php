@@ -46,6 +46,7 @@ Route::group(['middleware' => 'cors'], function () {
         Route::get('/users/rejected-followers', [FollowerController::class, 'rejectedFollowers']);
         Route::get('/users/notifications', [FollowerController::class, 'notifications']);
 
+        Route::put('/users/update', [UserController::class, 'update']);
         Route::get('/users/{username}', [UserController::class, 'show']);
         Route::get('/users', [UserController::class, 'index']);
     });
