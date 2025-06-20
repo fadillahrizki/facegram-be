@@ -59,7 +59,7 @@ class PostController extends Controller
     {
         $size = max((int) $request->query('size', 10), 1);
 
-        $posts = Post::with(['user', 'attachments'])
+        $posts = Post::with(['user', 'attachments', 'likes'])
             ->where(function ($q) {
                 $q->where('user_id', auth()->id())
                     ->orWhereIn('user_id', auth()->user()->followings()->pluck('following_id'));
@@ -68,5 +68,28 @@ class PostController extends Controller
             ->paginate($size);
 
         return response()->json($posts);
+    }
+
+    public function like($id)
+    {
+        $post = Post::find($id);
+
+        if (!$post) {
+            return response()->json(['message' => 'Post not found'], 404);
+        }
+
+        $message = "";
+
+        $liked = null;
+
+        if ($post->likes()->where('user_id', auth()->id())->count()) {
+            $post->likes()->where('user_id', auth()->id())->delete();
+            $message = "success to remove like from the post";
+        } else {
+            $liked = $post->likes()->create(['user_id' => auth()->id()]);
+            $message = "success to like the post";
+        }
+
+        return response()->json(['message' => $message, 'data' => $liked]);
     }
 }

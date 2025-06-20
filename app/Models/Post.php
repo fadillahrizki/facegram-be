@@ -30,4 +30,9 @@ class Post extends Model
     {
         return $this->hasMany(Attachment::class);
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
 }

@@ -47,7 +47,7 @@ class UserController extends Controller
 
         $posts = [];
         if ($canViewPosts) {
-            $posts = $user->posts()->with('attachments', 'user')->latest()->get()->map(function ($post) {
+            $posts = $user->posts()->with('attachments', 'user', 'likes')->latest()->get()->map(function ($post) {
                 return [
                     'id' => $post->id,
                     'user' => [
@@ -55,6 +55,7 @@ class UserController extends Controller
                         'full_name' => $post->user->full_name,
                         'username' => $post->user->username,
                     ],
+                    'likes' => $post->likes,
                     'caption' => $post->caption,
                     'created_at' => $post->created_at,
                     'deleted_at' => $post->deleted_at,
