@@ -16,4 +16,5 @@ jobs:
           script: |
             cd /var/www/facegram
             git pull
+            composer install
             php artisan migrate
