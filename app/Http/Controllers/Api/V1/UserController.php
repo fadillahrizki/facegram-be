@@ -93,11 +93,7 @@ class UserController extends Controller
             $posts = $user->posts()->with('attachments', 'user.profilePicture', 'likes', 'comments.user.profilePicture')->latest()->get()->map(function ($post) {
                 return [
                     'id' => $post->id,
-                    'user' => [
-                        'id' => $post->user->id,
-                        'full_name' => $post->user->full_name,
-                        'username' => $post->user->username,
-                    ],
+                    'user' => $post->user,
                     'likes' => $post->likes,
                     'comments' => $post->comments,
                     'caption' => $post->caption,

@@ -101,7 +101,7 @@ class PostController extends Controller
             return response()->json(['message' => 'Post not found'], 404);
         }
 
-        $comment = $post->comments()->create(['user_id' => auth()->id(), 'content' => $request->content])->load('user');
+        $comment = $post->comments()->create(['user_id' => auth()->id(), 'content' => $request->content])->load('user.profilePicture');
         $message = "success to comment the post";
 
         return response()->json(['message' => $message, 'data' => $comment]);
