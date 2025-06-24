@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use Reefki\DeviceDetector\Device as DeviceDetector;
+
 use App\Http\Controllers\Controller;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
@@ -29,6 +32,29 @@ class AuthController extends Controller
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
+        $device = $request->device();
+        $device->parse();
+        $deviceInfo = [];
+
+        if ($device->isBot()) {
+            $deviceInfo = [
+                'botInfo' => $device->getBot()
+            ];
+        } else {
+            $deviceInfo = [
+                'client' => $device->getClient(),
+                'os' => $device->getOs(),
+                'device_name' => $device->getDeviceName(),
+                'brand_name' => $device->getBrandName(),
+                'model' => $device->getModel(),
+                'ip' => $request->ip()
+            ];
+        }
+
+        $user->devices()->create([
+            'device_info' => json_encode($deviceInfo)
+        ]);
+
         return response()->json([
             'message' => 'Register success',
             'token' => $token,
@@ -47,6 +73,29 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
+
+        $device = $request->device();
+        $device->parse();
+        $deviceInfo = [];
+
+        if ($device->isBot()) {
+            $deviceInfo = [
+                'botInfo' => $device->getBot()
+            ];
+        } else {
+            $deviceInfo = [
+                'client' => $device->getClient(),
+                'os' => $device->getOs(),
+                'device_name' => $device->getDeviceName(),
+                'brand_name' => $device->getBrandName(),
+                'model' => $device->getModel(),
+                'ip' => $request->ip()
+            ];
+        }
+
+        $user->devices()->create([
+            'device_info' => json_encode($deviceInfo)
+        ]);
 
         return response()->json([
             'message' => 'Login success',

@@ -54,6 +54,11 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function devices()
+    {
+        return $this->hasMany(Device::class);
+    }
+
     public function followers()
     {
         return $this->hasMany(Follow::class, 'following_id')->where('is_accepted', true);
