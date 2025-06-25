@@ -47,7 +47,7 @@ class AuthController extends Controller
                 'device_name' => $device->getDeviceName(),
                 'brand_name' => $device->getBrandName(),
                 'model' => $device->getModel(),
-                'ip' => $request->ip()
+                'ip' => file_get_contents('https://api.ipify.org')
             ];
         }
 
@@ -89,7 +89,7 @@ class AuthController extends Controller
                 'device_name' => $device->getDeviceName(),
                 'brand_name' => $device->getBrandName(),
                 'model' => $device->getModel(),
-                'ip' => $request->ip()
+                'ip' => file_get_contents('https://api.ipify.org')
             ];
         }
 
