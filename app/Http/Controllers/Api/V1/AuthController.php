@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Reefki\DeviceDetector\Device as DeviceDetector;
-
 use App\Http\Controllers\Controller;
-use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Stevebauman\Location\Facades\Location;
 
 class AuthController extends Controller
 {
@@ -35,6 +33,7 @@ class AuthController extends Controller
         $device = $request->device();
         $device->parse();
         $deviceInfo = [];
+        $position = Location::get(file_get_contents('https://api.ipify.org'));
 
         if ($device->isBot()) {
             $deviceInfo = [
@@ -47,7 +46,8 @@ class AuthController extends Controller
                 'device_name' => $device->getDeviceName(),
                 'brand_name' => $device->getBrandName(),
                 'model' => $device->getModel(),
-                'ip' => file_get_contents('https://api.ipify.org')
+                'ip' => file_get_contents('https://api.ipify.org'),
+                'position' => $position
             ];
         }
 
@@ -77,6 +77,7 @@ class AuthController extends Controller
         $device = $request->device();
         $device->parse();
         $deviceInfo = [];
+        $position = Location::get(file_get_contents('https://api.ipify.org'));
 
         if ($device->isBot()) {
             $deviceInfo = [
@@ -89,7 +90,8 @@ class AuthController extends Controller
                 'device_name' => $device->getDeviceName(),
                 'brand_name' => $device->getBrandName(),
                 'model' => $device->getModel(),
-                'ip' => file_get_contents('https://api.ipify.org')
+                'ip' => file_get_contents('https://api.ipify.org'),
+                'position' => $position
             ];
         }
 
